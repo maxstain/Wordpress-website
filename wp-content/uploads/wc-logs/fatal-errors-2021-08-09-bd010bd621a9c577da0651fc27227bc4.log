@@ -1,0 +1,72 @@
+2021-08-09T13:01:22+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-content\plugins\woocommerce\packages\woocommerce-admin\src\RemoteInboxNotifications\StoredStateSetupForProducts.php on line 8
+
+2021-08-09T13:15:55+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 454656 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:16:16+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 716800 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:16:42+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 450560 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:16:55+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 741376 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:17:05+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 450560 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:17:09+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 430080 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:17:17+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 708608 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T13:17:21+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 454656 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:15:12+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 663552 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:18:30+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 483328 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:18:35+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 679936 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:21:24+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 475136 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:21:32+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 602112 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:21:46+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 884736 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:22:20+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 458752 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:22:35+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 577536 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:22:44+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 630784 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:22:50+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 507904 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:22:56+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 692224 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:23:03+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 585728 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:23:11+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 667648 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:23:26+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 614400 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T15:23:37+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 684032 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:25:40+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 417792 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:25:53+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 536576 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:32:14+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 552960 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:34:51+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 552960 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:35:09+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 647168 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:35:50+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 434176 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:36:57+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 495616 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:37:53+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-includes\Requests\Transport\cURL.php on line 484
+
+2021-08-09T20:38:28+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 561152 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:41:32+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 692224 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:42:31+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 593920 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
+2021-08-09T20:42:35+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 847872 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
+
