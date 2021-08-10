@@ -1,834 +1,1244 @@
 <?php
 /**
- * Custom template tags for this theme.
+ * Template tags used throught the theme.
  *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
+ * @package     Sinatra
+ * @author      Sinatra Team <hello@sinatrawp.com>
+ * @since       1.0.0
  */
 
 /**
- * Table of Contents:
- * Logo & Description
- * Comments
- * Post Meta
- * Menus
- * Classes
- * Archives
- * Miscellaneous
+ * Do not allow direct script access.
  */
-
-/**
- * Logo & Description
- */
-
-/**
- * Displays the site logo, either text or image.
- *
- * @since Twenty Twenty 1.0
- *
- * @param array $args Arguments for displaying the site logo either as an image or text.
- * @param bool  $echo Echo or return the HTML.
- * @return string Compiled HTML based on our arguments.
- */
-function twentytwenty_site_logo( $args = array(), $echo = true ) {
-	$logo       = get_custom_logo();
-	$site_title = get_bloginfo( 'name' );
-	$contents   = '';
-	$classname  = '';
-
-	$defaults = array(
-		'logo'        => '%1$s<span class="screen-reader-text">%2$s</span>',
-		'logo_class'  => 'site-logo',
-		'title'       => '<a href="%1$s">%2$s</a>',
-		'title_class' => 'site-title',
-		'home_wrap'   => '<h1 class="%1$s">%2$s</h1>',
-		'single_wrap' => '<div class="%1$s faux-heading">%2$s</div>',
-		'condition'   => ( is_front_page() || is_home() ) && ! is_page(),
-	);
-
-	$args = wp_parse_args( $args, $defaults );
-
-	/**
-	 * Filters the arguments for `twentytwenty_site_logo()`.
-	 *
-	 * @since Twenty Twenty 1.0
-	 *
-	 * @param array $args     Parsed arguments.
-	 * @param array $defaults Function's default arguments.
-	 */
-	$args = apply_filters( 'twentytwenty_site_logo_args', $args, $defaults );
-
-	if ( has_custom_logo() ) {
-		$contents  = sprintf( $args['logo'], $logo, esc_html( $site_title ) );
-		$classname = $args['logo_class'];
-	} else {
-		$contents  = sprintf( $args['title'], esc_url( get_home_url( null, '/' ) ), esc_html( $site_title ) );
-		$classname = $args['title_class'];
-	}
-
-	$wrap = $args['condition'] ? 'home_wrap' : 'single_wrap';
-
-	$html = sprintf( $args[ $wrap ], $classname, $contents );
-
-	/**
-	 * Filters the arguments for `twentytwenty_site_logo()`.
-	 *
-	 * @since Twenty Twenty 1.0
-	 *
-	 * @param string $html      Compiled HTML based on our arguments.
-	 * @param array  $args      Parsed arguments.
-	 * @param string $classname Class name based on current view, home or single.
-	 * @param string $contents  HTML for site title or logo.
-	 */
-	$html = apply_filters( 'twentytwenty_site_logo', $html, $args, $classname, $contents );
-
-	if ( ! $echo ) {
-		return $html;
-	}
-
-	echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-/**
- * Displays the site description.
- *
- * @since Twenty Twenty 1.0
- *
- * @param bool $echo Echo or return the html.
- * @return string The HTML to display.
- */
-function twentytwenty_site_description( $echo = true ) {
-	$description = get_bloginfo( 'description' );
-
-	if ( ! $description ) {
-		return;
-	}
-
-	$wrapper = '<div class="site-description">%s</div><!-- .site-description -->';
-
-	$html = sprintf( $wrapper, esc_html( $description ) );
-
+if ( ! function_exists( 'sinatra_get_schema_markup' ) ) :
 	/**
-	 * Filters the HTML for the site description.
+	 * Return correct schema markup.
 	 *
-	 * @since Twenty Twenty 1.0
-	 *
-	 * @param string $html        The HTML to display.
-	 * @param string $description Site description via `bloginfo()`.
-	 * @param string $wrapper     The format used in case you want to reuse it in a `sprintf()`.
+	 * @since 1.0.0
+	 * @param string $location Location for schema parameters.
 	 */
-	$html = apply_filters( 'twentytwenty_site_description', $html, $description, $wrapper );
+	function sinatra_get_schema_markup( $location = '' ) {
 
-	if ( ! $echo ) {
-		return $html;
+		// Check if schema is enabled.
+		if ( ! sinatra_is_schema_enabled() ) {
+			return;
+		}
+
+		// Return if no location parameter is passed.
+		if ( ! $location ) {
+			return;
+		}
+
+		$schema = '';
+
+		if ( 'url' === $location ) {
+			$schema = 'itemprop="url"';
+		} elseif ( 'name' === $location ) {
+			$schema = 'itemprop="name"';
+		} elseif ( 'text' === $location ) {
+			$schema = 'itemprop="text"';
+		} elseif ( 'headline' === $location ) {
+			$schema = 'itemprop="headline"';
+		} elseif ( 'image' === $location ) {
+			$schema = 'itemprop="image"';
+		} elseif ( 'header' === $location ) {
+			$schema = 'itemtype="https://schema.org/WPHeader" itemscope="itemscope"';
+		} elseif ( 'site_navigation' === $location ) {
+			$schema = 'itemtype="https://schema.org/SiteNavigationElement" itemscope="itemscope"';
+		} elseif ( 'logo' === $location ) {
+			$schema = 'itemprop="logo"';
+		} elseif ( 'description' === $location ) {
+			$schema = 'itemprop="description"';
+		} elseif ( 'organization' === $location ) {
+			$schema = 'itemtype="https://schema.org/Organization" itemscope="itemscope" ';
+		} elseif ( 'footer' === $location ) {
+			$schema = 'itemtype="http://schema.org/WPFooter" itemscope="itemscope"';
+		} elseif ( 'sidebar' === $location ) {
+			$schema = 'itemtype="http://schema.org/WPSideBar" itemscope="itemscope"';
+		} elseif ( 'main' === $location ) {
+			$schema = 'itemtype="http://schema.org/WebPageElement" itemprop="mainContentOfPage"';
+
+			if ( is_singular( 'post' ) ) {
+				$schema = 'itemscope itemtype="http://schema.org/Blog"';
+			}
+		} elseif ( 'author' === $location ) {
+			$schema = 'itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"';
+		} elseif ( 'name' === $location ) {
+			$schema = 'itemprop="name"';
+		} elseif ( 'datePublished' === $location ) {
+			$schema = 'itemprop="datePublished"';
+		} elseif ( 'dateModified' === $location ) {
+			$schema = 'itemprop="dateModified"';
+		} elseif ( 'article' === $location ) {
+			$schema = 'itemscope="" itemtype="https://schema.org/CreativeWork"';
+		} elseif ( 'comment' === $location ) {
+			$schema = 'itemprop="comment" itemscope="" itemtype="https://schema.org/Comment"';
+		} elseif ( 'html' === $location ) {
+			if ( is_singular() ) {
+				$schema = 'itemscope itemtype="http://schema.org/WebPage"';
+			} else {
+				$schema = 'itemscope itemtype="http://schema.org/Article"';
+			}
+		}
+
+		$schema = ' ' . trim( apply_filters( 'sinatra_schema_markup', $schema, $location ) );
+
+		return $schema;
 	}
+endif;
 
-	echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}
+if ( ! function_exists( 'sinatra_schema_markup' ) ) :
+	/**
+	 * Outputs correct schema markup
+	 *
+	 * @since 1.0.0
+	 * @param string $location Location for schema parameters.
+	 */
+	function sinatra_schema_markup( $location ) {
+		echo sinatra_get_schema_markup( $location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+endif;
 
-/**
- * Comments
- */
+if ( ! function_exists( 'sinatra_logo' ) ) :
+	/**
+	 * Outputs theme logo markup.
+	 *
+	 * @since 1.0.0
+	 * @param boolean|string $echo - Print the logo or return as string.
+	 */
+	function sinatra_logo( $echo = true ) {
 
-/**
- * Checks if the specified comment is written by the author of the post commented on.
- *
- * @since Twenty Twenty 1.0
- *
- * @param object $comment Comment data.
- * @return bool
- */
-function twentytwenty_is_comment_by_post_author( $comment = null ) {
+		$display_site_description = sinatra_option( 'display_tagline' );
+		$site_title               = sinatra_get_site_title();
+		$site_url                 = sinatra_get_site_url();
 
-	if ( is_object( $comment ) && $comment->user_id > 0 ) {
+		$site_title_output       = '';
+		$site_description_output = '';
 
-		$user = get_userdata( $comment->user_id );
-		$post = get_post( $comment->comment_post_ID );
+		// Check if a custom logo image has been uploaded.
+		if ( sinatra_has_logo() ) {
 
-		if ( ! empty( $user ) && ! empty( $post ) ) {
+			$default_logo = sinatra_option( 'custom_logo', '' );
 
-			return $comment->user_id === $post->post_author;
+			$retina_logo = sinatra_option( 'logo_default_retina' );
+			$retina_logo = isset( $retina_logo['background-image-id'] ) ? $retina_logo['background-image-id'] : false;
 
+			$site_title_output = sinatra_get_logo_img_output( $default_logo, $retina_logo );
+
+			// Allow logo output to be filtered.
+			$site_title_output = apply_filters( 'sinatra_logo_img_output', $site_title_output );
+
+		} else {
+
+			// Set tag to H1 for home page, span for other pages.
+			$site_title_tag = is_home() || is_front_page() ? 'h1' : 'span';
+			$site_title_tag = apply_filters( 'sinatra_site_title_tag', $site_title_tag );
+
+			// Site Title HTML markup.
+			$site_title_output = apply_filters(
+				'sinatra_site_title_markup',
+				sprintf(
+					'<%1$s class="site-title"%4$s>
+						<a href="%2$s" rel="home"%5$s>
+							%3$s
+						</a>
+					</%1$s>',
+					tag_escape( $site_title_tag ),
+					esc_url( $site_url ),
+					esc_html( $site_title ),
+					sinatra_get_schema_markup( 'name' ),
+					sinatra_get_schema_markup( 'url' )
+				)
+			);
+		}
+
+		// Output site description if enabled in Customizer.
+		if ( $display_site_description ) {
+
+			$site_description_output = apply_filters(
+				'sinatra_site_description_markup',
+				sprintf(
+					'<p class="site-description"%2$s>
+						%1$s
+					</p>',
+					esc_html( sinatra_get_site_description() ),
+					sinatra_get_schema_markup( 'description' )
+				)
+			);
+		}
+
+		$site_title_output = '<div class="logo-inner">' . $site_title_output . $site_description_output . '</div>';
+
+		// Allow output to be filtered.
+		$output = apply_filters( 'sinatra_logo_output', $site_title_output );
+
+		// Echo or return the output.
+		if ( $echo ) {
+			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} else {
+			return $output;
 		}
 	}
-	return false;
+endif;
 
-}
+if ( ! function_exists( 'sinatra_get_logo_img_output' ) ) :
+	/**
+	 * Outputs logo image markup.
+	 *
+	 * @param int    $logo Attachment ID of the logo image.
+	 * @param int    $retina Attachment ID of the retina logo image.
+	 * @param string $class Additional CSS class.
+	 * @since 1.0.0
+	 */
+	function sinatra_get_logo_img_output( $logo, $retina = '', $class = '' ) {
 
-/**
- * Filters comment reply link to not JS scroll.
- *
- * Filter the comment reply link to add a class indicating it should not use JS slow-scroll, as it
- * makes it scroll to the wrong position on the page.
- *
- * @since Twenty Twenty 1.0
- *
- * @param string $link Link to the top of the page.
- * @return string Link to the top of the page.
- */
-function twentytwenty_filter_comment_reply_link( $link ) {
+		$output = '';
 
-	$link = str_replace( 'class=\'', 'class=\'do-not-scroll ', $link );
-	return $link;
+		// Logo attributes.
+		$logo_attr = array(
+			'url'    => '',
+			'width'  => '',
+			'height' => '',
+			'class'  => '',
+			'alt'    => '',
+		);
 
-}
+		// Check if a custom logo has been uploaded.
+		if ( $logo ) {
 
-add_filter( 'comment_reply_link', 'twentytwenty_filter_comment_reply_link' );
+			// Get default logo src, width & height.
+			$default_logo_attachment_src = wp_get_attachment_image_src( $logo, 'full' );
 
-/**
- * Post Meta
- */
+			if ( $default_logo_attachment_src ) {
+				$logo_attr['url']    = $default_logo_attachment_src[0];
+				$logo_attr['width']  = $default_logo_attachment_src[1];
+				$logo_attr['height'] = $default_logo_attachment_src[2];
+			}
 
-/**
- * Retrieves and displays the post meta.
- *
- * If it's a single post, outputs the post meta values specified in the Customizer settings.
- *
- * @since Twenty Twenty 1.0
- *
- * @param int    $post_id  The ID of the post for which the post meta should be output.
- * @param string $location Which post meta location to output – single or preview.
- */
-function twentytwenty_the_post_meta( $post_id = null, $location = 'single-top' ) {
+			// Check if uploaded logo is SVG.
+			$mimes          = array();
+			$mimes['svg']   = 'image/svg+xml';
+			$file_type      = wp_check_filetype( $logo_attr['url'], $mimes );
+			$file_extension = $file_type['ext'];
 
-	echo twentytwenty_get_post_meta( $post_id, $location ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in twentytwenty_get_post_meta().
+			if ( 'svg' === $file_extension ) {
+				$logo_attr['width']  = '100%';
+				$logo_attr['height'] = '100%';
+				$logo_attr['class']  = 'si-svg-logo';
+			}
 
-}
+			// Get default logo alt.
+			$default_logo_alt = get_post_meta( $logo, '_wp_attachment_image_alt', true );
+			$logo_attr['alt'] = $default_logo_alt ? $default_logo_alt : sinatra_get_site_title();
 
-/**
- * Filters the edit post link to add an icon and use the post meta structure.
- *
- * @since Twenty Twenty 1.0
- *
- * @param string $link    Anchor tag for the edit link.
- * @param int    $post_id Post ID.
- * @param string $text    Anchor text.
- */
-function twentytwenty_edit_post_link( $link, $post_id, $text ) {
-	if ( is_admin() ) {
-		return $link;
+			// Build srcset attribute.
+			$srcset = '';
+
+			if ( $retina ) {
+				$retina_logo_image = wp_get_attachment_image_url( $retina, 'full' );
+
+				if ( $retina_logo_image ) {
+					$srcset = ' srcset="' . esc_attr( $logo_attr['url'] ) . ' 1x, ' . esc_attr( $retina_logo_image ) . ' 2x"';
+				}
+			}
+
+			// Build logo output.
+			$output = sprintf(
+				'<a href="%1$s" rel="home" class="%2$s"%3$s>
+					<img src="%4$s" alt="%5$s" width="%6$s" height="%7$s" class="%8$s"%9$s%10$s/>
+				</a>',
+				esc_url( sinatra_get_site_url() ),
+				esc_attr( trim( $class ) ),
+				sinatra_get_schema_markup( 'url' ),
+				esc_url( $logo_attr['url'] ),
+				esc_attr( $logo_attr['alt'] ),
+				esc_attr( $logo_attr['width'] ),
+				esc_attr( $logo_attr['height'] ),
+				esc_attr( $logo_attr['class'] ),
+				$srcset,
+				sinatra_get_schema_markup( 'logo' )
+			);
+		}
+
+		return $output;
 	}
+endif;
 
-	$edit_url = get_edit_post_link( $post_id );
-
-	if ( ! $edit_url ) {
-		return;
-	}
-
-	$text = sprintf(
-		wp_kses(
-			/* translators: %s: Post title. Only visible to screen readers. */
-			__( 'Edit <span class="screen-reader-text">%s</span>', 'twentytwenty' ),
-			array(
-				'span' => array(
-					'class' => array(),
-				),
-			)
-		),
-		get_the_title( $post_id )
-	);
-
-	return '<div class="post-meta-wrapper post-meta-edit-link-wrapper"><ul class="post-meta"><li class="post-edit meta-wrapper"><span class="meta-icon">' . twentytwenty_get_theme_svg( 'edit' ) . '</span><span class="meta-text"><a href="' . esc_url( $edit_url ) . '">' . $text . '</a></span></li></ul><!-- .post-meta --></div><!-- .post-meta-wrapper -->';
-
-}
-
-add_filter( 'edit_post_link', 'twentytwenty_edit_post_link', 10, 3 );
-
-/**
- * Retrieves the post meta.
- *
- * @since Twenty Twenty 1.0
- *
- * @param int    $post_id  The ID of the post.
- * @param string $location The location where the meta is shown.
- */
-function twentytwenty_get_post_meta( $post_id = null, $location = 'single-top' ) {
-
-	// Require post ID.
-	if ( ! $post_id ) {
-		return;
-	}
+if ( ! function_exists( 'sinatra_edit_post_link' ) ) :
 
 	/**
-	 * Filters post types array.
+	 * Function to get Edit Post Link
 	 *
-	 * This filter can be used to hide post meta information of post, page or custom post type
-	 * registered by child themes or plugins.
+	 * @since 1.0.0
 	 *
-	 * @since Twenty Twenty 1.0
-	 *
-	 * @param array Array of post types.
+	 * @param string      $text   Optional. Anchor text. If null, default is 'Edit This'. Default null.
+	 * @param string      $before Optional. Display before edit link. Default empty.
+	 * @param string      $after  Optional. Display after edit link. Default empty.
+	 * @param int|WP_Post $id     Optional. Post ID or post object. Default is the global `$post`.
+	 * @param string      $class  Optional. Add custom class to link. Default 'post-edit-link'.
 	 */
-	$disallowed_post_types = apply_filters( 'twentytwenty_disallowed_post_types_for_meta_output', array( 'page' ) );
+	function sinatra_edit_post_link( $text, $before = '', $after = '', $id = 0, $class = 'post-edit-link' ) {
 
-	// Check whether the post type is allowed to output post meta.
-	if ( in_array( get_post_type( $post_id ), $disallowed_post_types, true ) ) {
-		return;
+		if ( apply_filters( 'sinatra_edit_post_link', true ) && get_edit_post_link() ) {
+
+			edit_post_link( $text, $before, $after, $id, $class );
+		}
 	}
+endif;
 
-	$post_meta_wrapper_classes = '';
-	$post_meta_classes         = '';
+if ( ! function_exists( 'sinatra_page_header_title' ) ) :
+	/**
+	 * Output the Page Header title tag.
+	 *
+	 * @since 1.0.0
+	 * @param boolean $echo Display or return the title.
+	 */
+	function sinatra_page_header_title( $echo = true ) {
 
-	// Get the post meta settings for the location specified.
-	if ( 'single-top' === $location ) {
-		/**
-		 * Filters post meta info visibility.
-		 *
-		 * Use this filter to hide post meta information like Author, Post date, Comments, Is sticky status.
-		 *
-		 * @since Twenty Twenty 1.0
-		 *
-		 * @param array $args {
-		 *     @type string $author
-		 *     @type string $post-date
-		 *     @type string $comments
-		 *     @type string $sticky
-		 * }
-		 */
-		$post_meta = apply_filters(
-			'twentytwenty_post_meta_location_single_top',
-			array(
-				'author',
-				'post-date',
-				'comments',
-				'sticky',
-			)
-		);
+		$title = apply_filters( 'sinatra_page_header_title', sinatra_get_the_title() );
+		$tag   = apply_filters( 'sinatra_page_header_title_tag', 'h1' );
+		$class = array( 'page-title' );
+		$class = apply_filters( 'sinatra_page_header_title_class', $class );
 
-		$post_meta_wrapper_classes = ' post-meta-single post-meta-single-top';
+		if ( ! empty( $class ) ) {
+			$class = ' class="' . esc_attr( trim( implode( ' ', $class ) ) ) . '"';
+		} else {
+			$class = '';
+		}
 
-	} elseif ( 'single-bottom' === $location ) {
+		$before = '<' . tag_escape( $tag ) . $class . sinatra_get_schema_markup( 'headline' ) . '>';
+		$after  = '</' . tag_escape( $tag ) . '>';
+		$title  = $before . wp_kses( $title, sinatra_get_allowed_html_tags() ) . $after;
 
-		/**
-		 * Filters post tags visibility.
-		 *
-		 * Use this filter to hide post tags.
-		 *
-		 * @since Twenty Twenty 1.0
-		 *
-		 * @param array $args {
-		 *     @type string $tags
-		 * }
-		 */
-		$post_meta = apply_filters(
-			'twentytwenty_post_meta_location_single_bottom',
-			array(
-				'tags',
-			)
-		);
-
-		$post_meta_wrapper_classes = ' post-meta-single post-meta-single-bottom';
-
+		if ( $echo ) {
+			echo $title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} else {
+			return $title;
+		}
 	}
+endif;
 
-	// If the post meta setting has the value 'empty', it's explicitly empty and the default post meta shouldn't be output.
-	if ( $post_meta && ! in_array( 'empty', $post_meta, true ) ) {
+if ( ! function_exists( 'sinatra_hamburger' ) ) :
+	/**
+	 * Output the hamburger button.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param  string $button_title Menu title.
+	 * @param  string $menu_id Menu ID.
+	 */
+	function sinatra_hamburger( $button_title, $menu_id ) {
 
-		// Make sure we don't output an empty container.
-		$has_meta = false;
-
-		global $post;
-		$the_post = get_post( $post_id );
-		setup_postdata( $the_post );
-
-		ob_start();
+		$classes = array( 'si-hamburger', 'hamburger--spin', 'si-hamburger-' . esc_attr( $menu_id ) );
+		$classes = apply_filters( 'sinatra_hamburger_menu_classes', $classes );
+		$classes = trim( implode( ' ', $classes ) );
 
 		?>
+		<button class="<?php echo esc_attr( $classes ); ?>" aria-label="<?php esc_attr_e( 'Menu', 'sinatra' ); ?>" aria-controls="<?php echo esc_attr( $menu_id ); ?>" type="button">
 
-		<div class="post-meta-wrapper<?php echo esc_attr( $post_meta_wrapper_classes ); ?>">
+			<?php if ( $button_title || is_customize_preview() ) { ?>
+				<span class="hamburger-label uppercase-text"><?php echo wp_kses( $button_title, sinatra_get_allowed_html_tags( 'button' ) ); ?></span>
+			<?php } ?>
 
-			<ul class="post-meta<?php echo esc_attr( $post_meta_classes ); ?>">
+			<span class="hamburger-box">
+				<span class="hamburger-inner"></span>
+			</span>
 
+		</button>
+		<?php
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_pagination' ) ) :
+	/**
+	 * Output the pagination navigation.
+	 *
+	 * @since 1.0.0
+	 */
+	function sinatra_pagination() {
+
+		// Don't print empty markup if there's only one page.
+		if ( $GLOBALS['wp_query']->max_num_pages <= 1 ) {
+			return;
+		}
+
+		?>
+		<div class="sinatra-pagination">
+			<?php
+
+			the_posts_pagination(
+				array(
+					'mid_size'  => 2,
+					'prev_text' => sinatra_animated_arrow( 'left', 'button', false ) . '<span class="screen-reader-text">' . __( 'Previous page', 'sinatra' ) . '</span>',
+					'next_text' => '<span class="screen-reader-text">' . __( 'Next page', 'sinatra' ) . '</span>' . sinatra_animated_arrow( 'right', 'button', false ),
+				)
+			);
+			?>
+		</div>
+		<?php
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_link_pages' ) ) :
+	/**
+	 * Output the wp_link_pages.
+	 *
+	 * @since 1.0.0
+	 */
+	function sinatra_link_pages() {
+
+		wp_link_pages(
+			array(
+				'before'      => '<div class="page-links"><em>' . esc_html__( 'Pages', 'sinatra' ) . '</em>',
+				'after'       => '</div>',
+				'link_before' => '<span>',
+				'link_after'  => '</span>',
+			)
+		);
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_animated_arrow' ) ) :
+	/**
+	 * Output the animated button HTML markup.
+	 *
+	 * @since 1.0.0
+	 * @param string  $style button style. Can be 'right', or 'left'.
+	 * @param string  $type  type attribute for <button> element.
+	 * @param boolean $echo  echo the outpur or return.
+	 * @return string | void
+	 */
+	function sinatra_animated_arrow( $style = 'right', $type = 'button', $echo = false ) {
+
+		if ( false !== $type ) {
+
+			$button = '
+			<button type="' . esc_attr( $type ) . '" class="sinatra-animate-arrow ' . esc_attr( $style ) . '-arrow" aria-hidden="true" role="button" tabindex="-1">
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="18px" viewBox="0 0 30 18" enable-background="new 0 0 30 18" xml:space="preserve">
+					
+					<path class="arrow-handle" d="M2.511,9.007l7.185-7.221c0.407-0.409,0.407-1.071,0-1.48s-1.068-0.409-1.476,0L0.306,8.259 c-0.408,0.41-0.408,1.072,0,1.481l7.914,7.952c0.407,0.408,1.068,0.408,1.476,0s0.407-1.07,0-1.479L2.511,9.007z">
+					</path>
+					
+					<path class="arrow-bar" fill-rule="evenodd" clip-rule="evenodd" d="M1,8h28.001c0.551,0,1,0.448,1,1c0,0.553-0.449,1-1,1H1c-0.553,0-1-0.447-1-1
+					                            C0,8.448,0.447,8,1,8z">
+					</path>
+				</svg>
+			</button>';
+
+		} else {
+			$button = '<svg aria-hidden="true" class="sinatra-animate-arrow ' . esc_attr( $style ) . '-arrow" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="18px" viewBox="0 0 30 18" enable-background="new 0 0 30 18" xml:space="preserve">
+					<path class="arrow-handle" d="M2.511,9.007l7.185-7.221c0.407-0.409,0.407-1.071,0-1.48s-1.068-0.409-1.476,0L0.306,8.259 c-0.408,0.41-0.408,1.072,0,1.481l7.914,7.952c0.407,0.408,1.068,0.408,1.476,0s0.407-1.07,0-1.479L2.511,9.007z"></path>
+					<path class="arrow-bar" fill-rule="evenodd" clip-rule="evenodd" d="M30,9c0,0.553-0.447,1-1,1H1c-0.551,0-1-0.447-1-1c0-0.552,0.449-1,1-1h28.002 C29.554,8,30,8.448,30,9z"></path>
+					</svg>';
+		}
+
+		if ( $echo ) {
+			echo $button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		} else {
+			return $button;
+		}
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_excerpt' ) ) :
+	/**
+	 * Get excerpt.
+	 *
+	 * @since 1.0.0
+	 * @param int    $length the length of the excerpt.
+	 * @param string $more What to append if $text needs to be trimmed.
+	 */
+	function sinatra_excerpt( $length = null, $more = null ) {
+
+		global $post;
+
+		// Check if this post has a custom excerpt.
+		if ( has_excerpt( $post->ID ) ) {
+			$output = $post->post_excerpt;
+		} else {
+			// Check for more tag.
+			if ( strpos( $post->post_content, '<!--more-->' ) ) {
+				$output = apply_filters( 'the_content', get_the_content() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+			} else {
+
+				if ( null === $length ) {
+					$length = apply_filters( 'excerpt_length', intval( sinatra_option( 'excerpt_length' ) ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				}
+
+				if ( null === $more ) {
+					$more = apply_filters( 'excerpt_more', sinatra_option( 'excerpt_more' ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				}
+
+				$output = wp_trim_words( strip_shortcodes( $post->post_content ), $length, $more );
+			}
+		}
+
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_entry_meta_author' ) ) :
+	/**
+	 * Prints HTML with meta information about theme author.
+	 *
+	 * @since 1.0.0
+	 * @param array $args Author meta arguments.
+	 */
+	function sinatra_entry_meta_author( $args = array() ) {
+
+		$defaults = array(
+			'show_avatar' => is_single() && sinatra_option( 'single_entry_meta_icons' ) || ! is_single() && sinatra_option( 'entry_meta_icons' ),
+			'user_id'     => get_post_field( 'post_author', get_the_ID() ),
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+		$args = apply_filters( 'sinatra_entry_meta_author_args', $args );
+
+		?>
+		<span class="post-author">
+			<span class="posted-by vcard author"<?php sinatra_schema_markup( 'author' ); ?>>
+				<span class="screen-reader-text"><?php esc_html_e( 'Posted by', 'sinatra' ); ?></span>
+
+				<?php if ( $args['show_avatar'] ) { ?>
+					<span class="author-avatar">
+						<?php echo get_avatar( get_the_author_meta( 'email', $args['user_id'] ), 30 ); ?>
+					</span>
+				<?php } ?>
+
+				<span>
+					<?php // Translators: Author Name. ?>
+					<?php esc_html_e( 'By ', 'sinatra' ); ?>
+					<a class="url fn n" title="<?php /* translators: %1$s Author */ printf( esc_attr__( 'View all posts by %1$s', 'sinatra' ), get_the_author() ); ?>" 
+						href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID', $args['user_id'] ) ) ); ?>" rel="author"<?php sinatra_schema_markup( 'url' ); ?>>
+						<span class="author-name"<?php sinatra_schema_markup( 'name' ); ?>><?php echo esc_html( get_the_author_meta( 'display_name', $args['user_id'] ) ); ?></span>
+					</a>
+				</span>
+			</span>
+		</span>
+		<?php
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_entry_meta_date' ) ) :
+	/**
+	 * Prints HTML with meta information for the current post-date/time.
+	 *
+	 * @since 1.0.0
+	 * @param array $args Date meta arguments.
+	 */
+	function sinatra_entry_meta_date( $args = array() ) {
+
+		$defaults = array(
+			'show_published' => true,
+			'show_modified'  => false,
+			'modified_label' => esc_html__( 'Last updated on', 'sinatra' ),
+			'date_format'    => '',
+			'before'         => '<span class="posted-on">',
+			'after'          => '</span>',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+		$args = apply_filters( 'sinatra_entry_date_args', $args );
+
+		// Icon.
+		$icon = sinatra()->icons->get_meta_icon( 'date', sinatra()->icons->get_svg( 'clock', array( 'aria-hidden' => 'true' ) ) );
+
+		if ( $args['show_published'] ) {
+
+			if ( $args['show_modified'] && get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
+				$time_string = '<time class="entry-date published" datetime="%1$s"%2$s>%3$s</time><time class="updated" datetime="%4$s"%5$s>%6$s</time>';
+			} else {
+				$time_string = '<time class="entry-date published updated" datetime="%1$s"%2$s>%3$s</time>';
+			}
+		} elseif ( $args['show_modified'] ) {
+
+			if ( get_the_time( 'U' ) === get_the_modified_time( 'U' ) ) {
+				$time_string = '<time class="entry-date published updated" datetime="%4$s"%5$s>%6$s</time>';
+			} else {
+				$time_string = '<time class="entry-date updated" datetime="%4$s"%5$s>%6$s</time>';
+			}
+		}
+
+		$args['modified_label'] = $args['modified_label'] ? $args['modified_label'] . ' ' : '';
+
+		$time_string = sprintf(
+			$time_string,
+			esc_attr( get_the_date( DATE_W3C ) ),
+			sinatra_get_schema_markup( 'datePublished' ),
+			$icon . esc_html( get_the_date( $args['date_format'] ) ),
+			esc_attr( get_the_modified_date( DATE_W3C ) ),
+			sinatra_get_schema_markup( 'dateModified' ),
+			esc_html( $args['modified_label'] ) . esc_html( get_the_modified_date( $args['date_format'] ) )
+		);
+
+		echo wp_kses(
+			sprintf(
+				'%1$s%2$s%3$s',
+				$args['before'],
+				$time_string,
+				$args['after']
+			),
+			sinatra_get_allowed_html_tags()
+		);
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_entry_meta_comments' ) ) :
+	/**
+	 * Prints HTML with meta information for the comments.
+	 *
+	 * @since 1.0.0
+	 */
+	function sinatra_entry_meta_comments() {
+
+		$icon = sinatra()->icons->get_meta_icon( 'comments', sinatra()->icons->get_svg( 'message-square', array( 'aria-hidden' => 'true' ) ) );
+
+		if ( ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
+			echo '<span class="comments-link">';
+
+			comments_popup_link( wp_kses_post( $icon ) . esc_html__( 'No Comments', 'sinatra' ), wp_kses( $icon, sinatra_get_allowed_html_tags( 'post' ) ) . esc_html__( '1 Comment', 'sinatra' ), wp_kses( $icon, sinatra_get_allowed_html_tags( 'post' ) ) . esc_html__( '% Comments', 'sinatra' ), 'comments-link' );
+
+			echo '</span>';
+		}
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_entry_meta_category' ) ) :
+	/**
+	 * Prints HTML with meta information for the categories.
+	 *
+	 * @since 1.0.0
+	 * @param string $sep Category separator.
+	 * @param bool   $show_icon Show an icon for the meta detail.
+	 * @param bool   $return Return or output.
+	 */
+	function sinatra_entry_meta_category( $sep = ', ', $show_icon = true, $return = false ) {
+
+		$categories_list = get_the_category_list( $sep );
+		$output          = '';
+
+		// Icon.
+		$icon = $show_icon ? sinatra()->icons->get_meta_icon( 'category', sinatra()->icons->get_svg( 'bookmark', array( 'aria-hidden' => 'true' ) ) ) : '';
+
+		if ( $categories_list ) {
+
+			/* translators: 1: posted in label, only visible to screen readers. 2: list of categories. */
+			$output = wp_kses(
+				apply_filters(
+					'sinatra_entry_meta_category',
+					sprintf(
+						'<span class="cat-links"><span class="screen-reader-text">%1$s</span>%3$s%2$s</span>',
+						__( 'Posted in', 'sinatra' ),
+						'<span>' . $categories_list . '</span>',
+						$icon
+					)
+				),
+				sinatra_get_allowed_html_tags()
+			);
+
+			if ( $return ) {
+				return $output; // return is used by Core plugin for Posts widget.
+			} else {
+				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+		}
+
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_entry_meta_tag' ) ) :
+	/**
+	 * Prints HTML with meta information for the tags.
+	 *
+	 * @since 1.0.0
+	 * @param string $before    Before entry meta tag.
+	 * @param string $sep       Separator string.
+	 * @param string $after     After entry meta tag.
+	 * @param int    $id        Post ID.
+	 * @param bool   $show_icon Show an icon for the meta detail.
+	 */
+	function sinatra_entry_meta_tag( $before = '<span class="cat-links"><span>', $sep = ', ', $after = '</span></span>', $id = 0, $show_icon = true ) {
+
+		$icon = $show_icon ? sinatra()->icons->get_meta_icon( 'tags', sinatra()->icons->get_svg( 'tag', array( 'aria-hidden' => 'true' ) ) ) : '';
+
+		// Add icon.
+		$before = $before . wp_kses( $icon, sinatra_get_allowed_html_tags() );
+
+		/* translators: used between list items, there is a space after the comma. */
+		$tags_list = get_the_tag_list( $before, $sep, $after, $id );
+
+		if ( $tags_list && ! post_password_required() ) {
+
+			$tag_string = '<span class="screen-reader-text">%1$s </span>%2$s';
+
+			/* translators: 1: posted in label, only visible to screen readers. 2: list of tags. */
+			echo wp_kses(
+				apply_filters(
+					'sinatra_entry_meta_tag',
+					sprintf(
+						$tag_string,
+						__( 'Tags:', 'sinatra' ),
+						$tags_list
+					)
+				),
+				sinatra_get_allowed_html_tags()
+			);
+		}
+
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_get_post_media' ) ) :
+
+	/**
+	 * Post format featured media: image / gallery / audio / video etc.
+	 *
+	 * @since  1.0
+	 * @return mixed
+	 * @param  string $post_format Post Format.
+	 * @param  mixed  $post        Post object.
+	 */
+	function sinatra_get_post_media( $post_format = false, $post = null ) {
+
+		if ( false === $post_format ) {
+			$post_format = get_post_format( $post );
+		}
+
+		$return = '';
+
+		switch ( $post_format ) {
+
+			case 'video':
+				$return = sinatra_get_video_from_post( $post );
+				break;
+
+			case 'audio':
+				$return = do_shortcode( sinatra_get_audio_from_post( $post ) );
+				break;
+
+			case 'gallery':
+				$gallery = sinatra_get_post_gallery( $post );
+
+				if ( isset( $gallery['ids'] ) ) {
+
+					$img_ids = explode( ',', $gallery['ids'] );
+
+					if ( is_array( $img_ids ) && ! empty( $img_ids ) ) {
+						foreach ( $img_ids as $img_id ) {
+
+							$image_alt = get_post_meta( $img_id, '_wp_attachment_image_alt', true );
+							$image_url = wp_get_attachment_url( $img_id );
+
+							$return .= '<a href="' . esc_url( get_permalink( $post ) ) . '" >';
+							$return .= '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $image_alt ) . '" >';
+							$return .= '</a>';
+						}
+					}
+				}
+				break;
+
+			case 'image':
+			default:
+				$size    = sinatra_option( 'blog_image_size' );
+				$caption = false;
+
+				if ( is_single( $post ) || is_page( $post ) ) {
+
+					$caption = true;
+
+					if ( 'no-sidebar' === sinatra_get_sidebar_position( $post ) ) {
+						$size = 'full';
+					}
+				}
+
+				if ( has_post_thumbnail( $post ) ) {
+					$return = sinatra_get_post_thumbnail( $post, $size, $caption );
+				} elseif ( 'image' === $post_format ) {
+					$return = sinatra_get_image_from_post( $post );
+				}
+
+				break;
+		}
+
+		return apply_filters( 'sinatra_get_post_media', $return, $post_format, $post );
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_post_media' ) ) :
+
+	/**
+	 * Print HTML format featured media: image / gallery / audio / video etc.
+	 *
+	 * @since 1.0
+	 * @return mixed
+	 * @param  string $post_format Post Format.
+	 */
+	function sinatra_post_media( $post_format = false ) {
+		echo sinatra_get_post_media( $post_format ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_top_bar_widget_text' ) ) :
+	/**
+	 * Outputs the top bar text widget.
+	 *
+	 * @since 1.0.0
+	 * @param array $options Array of widget options.
+	 */
+	function sinatra_top_bar_widget_text( $options ) {
+
+		$content = isset( $options['content'] ) ? $options['content'] : '';
+		$content = apply_filters( 'sinatra_dynamic_strings', $content );
+
+		echo '<span>' . wp_kses( do_shortcode( $content ), sinatra_get_allowed_html_tags() ) . '</span>';
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_top_bar_widget_nav' ) ) :
+	/**
+	 * Outputs the top bar navigation widget.
+	 *
+	 * @param array $options Array of navigation widget options.
+	 * @since 1.0.0
+	 */
+	function sinatra_top_bar_widget_nav( $options ) {
+
+		$defaults = array(
+			'menu_id'     => 'sinatra-topbar-nav',
+			'container'   => false,
+			'menu_class'  => false,
+			'link_before' => '<span>',
+			'link_after'  => '</span>',
+			'menu'        => '',
+		);
+
+		$options = wp_parse_args( $options, $defaults );
+		$options = apply_filters( 'sinatra_top_bar_navigation_args', $options );
+
+		if ( empty( $options['menu'] ) ) {
+			if ( is_user_logged_in() && current_user_can( 'edit_theme_options' ) ) {
+				?>
+				<ul>
+					<li class="sinatra-empty-nav">
+						<?php
+						if ( is_customize_preview() ) {
+							esc_html_e( 'Menu not assigned', 'sinatra' );
+						} else {
+							?>
+							<a href="<?php echo esc_url( admin_url( 'customize.php?autofocus[control]=sinatra_top_bar_widgets' ) ); ?>"><?php echo esc_html__( 'Assign a menu', 'sinatra' ); ?></a>
+						<?php } ?>
+					</li>
+				</ul>
 				<?php
+			}
+			return;
+		}
 
-				/**
-				 * Fires before post meta HTML display.
-				 *
-				 * Allow output of additional post meta info to be added by child themes and plugins.
-				 *
-				 * @since Twenty Twenty 1.0
-				 * @since Twenty Twenty 1.1 Added the `$post_meta` and `$location` parameters.
-				 *
-				 * @param int    $post_id   Post ID.
-				 * @param array  $post_meta An array of post meta information.
-				 * @param string $location  The location where the meta is shown.
-				 *                          Accepts 'single-top' or 'single-bottom'.
-				 */
-				do_action( 'twentytwenty_start_of_post_meta_list', $post_id, $post_meta, $location );
+		$options['before_nav'] = '<nav class="sinatra-nav" role="navigation" aria-label="' . esc_attr( $options['menu'] ) . '">';
+		$options['after_nav']  = '</nav>';
 
-				// Author.
-				if ( post_type_supports( get_post_type( $post_id ), 'author' ) && in_array( 'author', $post_meta, true ) ) {
+		sinatra_navigation( $options );
+	}
+endif;
 
-					$has_meta = true;
-					?>
-					<li class="post-author meta-wrapper">
-						<span class="meta-icon">
-							<span class="screen-reader-text"><?php _e( 'Post author', 'twentytwenty' ); ?></span>
-							<?php twentytwenty_the_theme_svg( 'user' ); ?>
-						</span>
-						<span class="meta-text">
+if ( ! function_exists( 'sinatra_top_bar_widget_socials' ) ) :
+	/**
+	 * Outputs the top bar social links widget.
+	 *
+	 * @param array $options Array of widget options.
+	 * @since 1.0.0
+	 */
+	function sinatra_top_bar_widget_socials( $options ) {
+		sinatra_social_links( $options );
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_header_widget_search' ) ) :
+	/**
+	 * Outputs the header search widget.
+	 *
+	 * @since 1.0.0
+	 * @param array $options Array of widget options.
+	 */
+	function sinatra_header_widget_search( $options ) {
+		get_template_part( 'template-parts/header/widgets/search' );
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_header_widget_button' ) ) :
+	/**
+	 * Outputs the header button widget.
+	 *
+	 * @since 1.0.0
+	 * @param array $options Array of widget options.
+	 */
+	function sinatra_header_widget_button( $options ) {
+
+		$class = array( $options['class'] );
+
+		if ( isset( $options['style'] ) ) {
+			$class[] = $options['style'];
+		}
+
+		$class[] = 'si-btn';
+
+		$class = apply_filters( 'sinatra_header_widget_button_class', $class );
+		$class = trim( implode( ' ', $class ) );
+
+		$text = empty( $options['text'] ) ? __( 'Add Button Text', 'sinatra' ) : $options['text'];
+
+		$target = 'target="_self"';
+
+		if ( '_blank' === $options['target'] ) {
+			$target = 'target="_blank" rel="noopener noreferrer"';
+		}
+
+		echo wp_kses(
+			sprintf(
+				'<a href="%1$s" class="%2$s" %3$s role="button"><span>%4$s</span></a>',
+				esc_url( $options['url'] ),
+				esc_attr( $class ),
+				$target,
+				esc_html( $text )
+			),
+			sinatra_get_allowed_html_tags()
+		);
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_copyright_widget_text' ) ) :
+	/**
+	 * Outputs the top bar text widget.
+	 *
+	 * @since 1.0.0
+	 * @param array $options Array of widget options.
+	 */
+	function sinatra_copyright_widget_text( $options ) {
+		sinatra_top_bar_widget_text( $options );
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_copyright_widget_nav' ) ) :
+	/**
+	 * Outputs the copyright navigation widget.
+	 *
+	 * @param array $options Array of widget options.
+	 * @since 1.0.0
+	 */
+	function sinatra_copyright_widget_nav( $options ) {
+
+		$defaults = array(
+			'menu_id'     => 'sinatra-footer-nav',
+			'container'   => false,
+			'menu_class'  => false,
+			'link_before' => '<span>',
+			'link_after'  => '</span>',
+			'menu'        => '',
+		);
+
+		$options = wp_parse_args( $options, $defaults );
+		$options = apply_filters( 'sinatra_copyright_navigation_args', $options );
+
+		if ( empty( $options['menu'] ) ) {
+			if ( is_user_logged_in() && current_user_can( 'edit_theme_options' ) ) {
+				?>
+				<ul>
+					<li class="sinatra-empty-nav">
+						<?php
+						if ( is_customize_preview() ) {
+							esc_html_e( 'Menu not assigned', 'sinatra' );
+						} else {
+							?>
+							<a href="<?php echo esc_url( admin_url( 'customize.php?autofocus[control]=sinatra_copyright_widgets' ) ); ?>"><?php echo esc_html__( 'Assign a menu', 'sinatra' ); ?></a>
+						<?php } ?>
+					</li>
+				</ul>
+				<?php
+			}
+			return;
+		}
+
+		$options['before_nav'] = '<nav role="navigation" class="sinatra-nav">';
+		$options['after_nav']  = '</nav>';
+
+		sinatra_navigation( $options );
+
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_copyright_widget_socials' ) ) :
+	/**
+	 * Outputs the copyright social links widget.
+	 *
+	 * @param array $options Array of widget options.
+	 * @since 1.0.0
+	 */
+	function sinatra_copyright_widget_socials( $options ) {
+		sinatra_social_links( $options );
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_footer_widgets' ) ) :
+	/**
+	 * Outputs the footer widgets.
+	 *
+	 * @since 1.0.0
+	 */
+	function sinatra_footer_widgets() {
+
+		$footer_layout  = sinatra_option( 'footer_layout' );
+		$column_classes = sinatra_get_footer_column_class( $footer_layout );
+
+		if ( is_array( $column_classes ) && ! empty( $column_classes ) ) {
+			foreach ( $column_classes as $i => $column_class ) {
+
+				$sidebar_id = 'sinatra-footer-' . ( $i + 1 );
+				?>
+				<div class="sinatra-footer-column <?php echo esc_attr( $column_class ); ?>">
+					<?php
+					if ( is_active_sidebar( $sidebar_id ) ) {
+						dynamic_sidebar( $sidebar_id );
+					} else {
+
+						if ( current_user_can( 'edit_theme_options' ) ) {
+
+							$sidebar_name = sinatra_get_sidebar_name_by_id( $sidebar_id );
+							?>
+							<div class="si-footer-widget si-widget sinatra-no-widget">
+
+								<div class='h4 widget-title'><?php echo esc_html( $sidebar_name ); ?></div>
+
+								<p class='no-widget-text'>
+									<?php if ( is_customize_preview() ) { ?>
+										<a href='#' class="sinatra-set-widget" data-sidebar-id="<?php echo esc_attr( $sidebar_id ); ?>">
+									<?php } else { ?>
+										<a href='<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>'>
+									<?php } ?>
+										<?php esc_html_e( 'Click here to assign a widget.', 'sinatra' ); ?>
+									</a>
+								</p>
+							</div>
 							<?php
-							printf(
-								/* translators: %s: Author name. */
-								__( 'By %s', 'twentytwenty' ),
-								'<a href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author_meta( 'display_name' ) ) . '</a>'
+						}
+					}
+					?>
+				</div>
+				<?php
+			}
+		}
+	}
+endif;
+
+if ( ! function_exists( 'sinatra_comment' ) ) :
+	/**
+	 * Comment and pingback output function.
+	 *
+	 * @since 1.0.0
+	 * @param string $comment Comment content.
+	 * @param array  $args    Comment arguments.
+	 * @param int    $depth   Comment depth.
+	 */
+	function sinatra_comment( $comment, $args, $depth ) {
+
+		global $post;
+
+		if ( 'pingback' === $comment->comment_type ) {
+			?>
+			<li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
+
+				<article id="comment-<?php comment_ID(); ?>" class="sinatra-pingback">
+					<p><?php esc_html_e( 'Pingback: ', 'sinatra' ); ?><span<?php sinatra_schema_markup( 'author_name' ); ?>><?php comment_author_link(); ?></span> <?php edit_comment_link( esc_html__( '(Edit)', 'sinatra' ), '<span class="edit-link">', '</span>' ); ?></p>
+				</article>
+
+		<?php } else { ?>
+			<li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
+				<article 
+				<?php
+				comment_class( 'comment-body' );
+				sinatra_schema_markup( 'comment' );
+				?>
+				>
+
+					<header class="comment-header">
+						<div class="comment-author vcard">
+
+							<span class="comment-author-avatar">
+								<?php echo get_avatar( $comment, $args['avatar_size'] ); ?>
+
+								<?php if ( $comment->user_id === $post->post_author ) { ?>
+									<span class="bypostauthor-badge" aria-hidden="true" title="<?php esc_attr_e( 'The post author', 'sinatra' ); ?>"><?php echo esc_html_x( 'A', 'Post author badge on comments', 'sinatra' ); ?></span>
+								<?php } ?>
+							</span>
+
+							<span class="comment-author-meta">
+								<cite class="fn">
+									<?php comment_author_link(); ?>
+								</cite>
+							</span>
+
+						</div><!-- END .comment-author -->
+
+						<div class="comment-actions">
+							<?php
+							$sinatra_comment_reply_link = get_comment_reply_link(
+								array_merge(
+									$args,
+									array(
+										'depth'      => $depth,
+										'reply_text' => $args['reply_text'],
+									)
+								)
 							);
 							?>
-						</span>
-					</li>
-					<?php
+							<div class="edit">
+								<?php edit_comment_link( __( 'Edit', 'sinatra' ) ); ?>
+							</div>
 
-				}
+							<?php
+							if ( current_user_can( 'edit_comment', get_comment_ID() ) && null !== $sinatra_comment_reply_link ) {
+								?>
+								<span class="si-comment-sep"></span>
+								<?php
+							}
+							?>
 
-				// Post date.
-				if ( in_array( 'post-date', $post_meta, true ) ) {
+							<div class="reply">
+								<?php echo $sinatra_comment_reply_link; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							</div>
+						</div>
+					</header><!-- END .comment-header -->
 
-					$has_meta = true;
-					?>
-					<li class="post-date meta-wrapper">
-						<span class="meta-icon">
-							<span class="screen-reader-text"><?php _e( 'Post date', 'twentytwenty' ); ?></span>
-							<?php twentytwenty_the_theme_svg( 'calendar' ); ?>
-						</span>
-						<span class="meta-text">
-							<a href="<?php the_permalink(); ?>"><?php the_time( get_option( 'date_format' ) ); ?></a>
-						</span>
-					</li>
-					<?php
+					<div class="comment-meta commentmetadata">
+						<?php comment_date(); ?>,
+						<a href="<?php echo esc_url( get_comment_link() ); ?>" class="comment-date">
+							<time datetime="<?php echo esc_attr( get_comment_date( 'c' ) ); ?>"><?php comment_time(); ?></time>
+						</a>
+					</div><!-- END .comment-meta -->
 
-				}
+					<div class="comment-content">
+						<?php if ( '0' === $comment->comment_approved ) : ?>
+							<p class="comment-awaiting-moderation"><em><?php esc_html_e( 'Your comment is awaiting moderation.', 'sinatra' ); ?></em></p>
+						<?php endif; ?>
 
-				// Categories.
-				if ( in_array( 'categories', $post_meta, true ) && has_category() ) {
+						<?php comment_text(); ?>
+					</div><!-- END .comment-content -->
 
-					$has_meta = true;
-					?>
-					<li class="post-categories meta-wrapper">
-						<span class="meta-icon">
-							<span class="screen-reader-text"><?php _e( 'Categories', 'twentytwenty' ); ?></span>
-							<?php twentytwenty_the_theme_svg( 'folder' ); ?>
-						</span>
-						<span class="meta-text">
-							<?php _ex( 'In', 'A string that is output before one or more categories', 'twentytwenty' ); ?> <?php the_category( ', ' ); ?>
-						</span>
-					</li>
-					<?php
-
-				}
-
-				// Tags.
-				if ( in_array( 'tags', $post_meta, true ) && has_tag() ) {
-
-					$has_meta = true;
-					?>
-					<li class="post-tags meta-wrapper">
-						<span class="meta-icon">
-							<span class="screen-reader-text"><?php _e( 'Tags', 'twentytwenty' ); ?></span>
-							<?php twentytwenty_the_theme_svg( 'tag' ); ?>
-						</span>
-						<span class="meta-text">
-							<?php the_tags( '', ', ', '' ); ?>
-						</span>
-					</li>
-					<?php
-
-				}
-
-				// Comments link.
-				if ( in_array( 'comments', $post_meta, true ) && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
-
-					$has_meta = true;
-					?>
-					<li class="post-comment-link meta-wrapper">
-						<span class="meta-icon">
-							<?php twentytwenty_the_theme_svg( 'comment' ); ?>
-						</span>
-						<span class="meta-text">
-							<?php comments_popup_link(); ?>
-						</span>
-					</li>
-					<?php
-
-				}
-
-				// Sticky.
-				if ( in_array( 'sticky', $post_meta, true ) && is_sticky() ) {
-
-					$has_meta = true;
-					?>
-					<li class="post-sticky meta-wrapper">
-						<span class="meta-icon">
-							<?php twentytwenty_the_theme_svg( 'bookmark' ); ?>
-						</span>
-						<span class="meta-text">
-							<?php _e( 'Sticky post', 'twentytwenty' ); ?>
-						</span>
-					</li>
-					<?php
-
-				}
-
-				/**
-				 * Fires after post meta HTML display.
-				 *
-				 * Allow output of additional post meta info to be added by child themes and plugins.
-				 *
-				 * @since Twenty Twenty 1.0
-				 * @since Twenty Twenty 1.1 Added the `$post_meta` and `$location` parameters.
-				 *
-				 * @param int    $post_id   Post ID.
-				 * @param array  $post_meta An array of post meta information.
-				 * @param string $location  The location where the meta is shown.
-				 *                          Accepts 'single-top' or 'single-bottom'.
-				 */
-				do_action( 'twentytwenty_end_of_post_meta_list', $post_id, $post_meta, $location );
-
-				?>
-
-			</ul><!-- .post-meta -->
-
-		</div><!-- .post-meta-wrapper -->
-
+				</article><!-- END .comment-body -->
+		<?php } // endif ?>
 		<?php
-
-		wp_reset_postdata();
-
-		$meta_output = ob_get_clean();
-
-		// If there is meta to output, return it.
-		if ( $has_meta && $meta_output ) {
-
-			return $meta_output;
-
-		}
 	}
+endif;
 
-}
-
-/**
- * Menus
- */
-
-/**
- * Filters classes of wp_list_pages items to match menu items.
- *
- * Filter the class applied to wp_list_pages() items with children to match the menu class, to simplify.
- * styling of sub levels in the fallback. Only applied if the match_menu_classes argument is set.
- *
- * @since Twenty Twenty 1.0
- *
- * @param string[] $css_class    An array of CSS classes to be applied to each list item.
- * @param WP_Post  $page         Page data object.
- * @param int      $depth        Depth of page, used for padding.
- * @param array    $args         An array of arguments.
- * @param int      $current_page ID of the current page.
- * @return array CSS class names.
- */
-function twentytwenty_filter_wp_list_pages_item_classes( $css_class, $page, $depth, $args, $current_page ) {
-
-	// Only apply to wp_list_pages() calls with match_menu_classes set to true.
-	$match_menu_classes = isset( $args['match_menu_classes'] );
-
-	if ( ! $match_menu_classes ) {
-		return $css_class;
-	}
-
-	// Add current menu item class.
-	if ( in_array( 'current_page_item', $css_class, true ) ) {
-		$css_class[] = 'current-menu-item';
-	}
-
-	// Add menu item has children class.
-	if ( in_array( 'page_item_has_children', $css_class, true ) ) {
-		$css_class[] = 'menu-item-has-children';
-	}
-
-	return $css_class;
-
-}
-
-add_filter( 'page_css_class', 'twentytwenty_filter_wp_list_pages_item_classes', 10, 5 );
-
-/**
- * Adds a Sub Nav Toggle to the Expanded Menu and Mobile Menu.
- *
- * @since Twenty Twenty 1.0
- *
- * @param stdClass $args  An object of wp_nav_menu() arguments.
- * @param WP_Post  $item  Menu item data object.
- * @param int      $depth Depth of menu item. Used for padding.
- * @return stdClass An object of wp_nav_menu() arguments.
- */
-function twentytwenty_add_sub_toggles_to_main_menu( $args, $item, $depth ) {
-
-	// Add sub menu toggles to the Expanded Menu with toggles.
-	if ( isset( $args->show_toggles ) && $args->show_toggles ) {
-
-		// Wrap the menu item link contents in a div, used for positioning.
-		$args->before = '<div class="ancestor-wrapper">';
-		$args->after  = '';
-
-		// Add a toggle to items with children.
-		if ( in_array( 'menu-item-has-children', $item->classes, true ) ) {
-
-			$toggle_target_string = '.menu-modal .menu-item-' . $item->ID . ' > .sub-menu';
-			$toggle_duration      = twentytwenty_toggle_duration();
-
-			// Add the sub menu toggle.
-			$args->after .= '<button class="toggle sub-menu-toggle fill-children-current-color" data-toggle-target="' . $toggle_target_string . '" data-toggle-type="slidetoggle" data-toggle-duration="' . absint( $toggle_duration ) . '" aria-expanded="false"><span class="screen-reader-text">' . __( 'Show sub menu', 'twentytwenty' ) . '</span>' . twentytwenty_get_theme_svg( 'chevron-down' ) . '</button>';
-
-		}
-
-		// Close the wrapper.
-		$args->after .= '</div><!-- .ancestor-wrapper -->';
-
-		// Add sub menu icons to the primary menu without toggles.
-	} elseif ( 'primary' === $args->theme_location ) {
-		if ( in_array( 'menu-item-has-children', $item->classes, true ) ) {
-			$args->after = '<span class="icon"></span>';
-		} else {
-			$args->after = '';
-		}
-	}
-
-	return $args;
-
-}
-
-add_filter( 'nav_menu_item_args', 'twentytwenty_add_sub_toggles_to_main_menu', 10, 3 );
-
-/**
- * Displays SVG icons in social links menu.
- *
- * @since Twenty Twenty 1.0
- *
- * @param string   $item_output The menu item's starting HTML output.
- * @param WP_Post  $item        Menu item data object.
- * @param int      $depth       Depth of the menu. Used for padding.
- * @param stdClass $args        An object of wp_nav_menu() arguments.
- * @return string The menu item output with social icon.
- */
-function twentytwenty_nav_menu_social_icons( $item_output, $item, $depth, $args ) {
-	// Change SVG icon inside social links menu if there is supported URL.
-	if ( 'social' === $args->theme_location ) {
-		$svg = TwentyTwenty_SVG_Icons::get_social_link_svg( $item->url );
-		if ( empty( $svg ) ) {
-			$svg = twentytwenty_get_theme_svg( 'link' );
-		}
-		$item_output = str_replace( $args->link_after, '</span>' . $svg, $item_output );
-	}
-
-	return $item_output;
-}
-
-add_filter( 'walker_nav_menu_start_el', 'twentytwenty_nav_menu_social_icons', 10, 4 );
-
-/**
- * Classes
- */
-
-/**
- * Adds 'no-js' class.
- *
- * If we're missing JavaScript support, the HTML element will have a 'no-js' class.
- *
- * @since Twenty Twenty 1.0
- */
-function twentytwenty_no_js_class() {
-
-	?>
-	<script>document.documentElement.className = document.documentElement.className.replace( 'no-js', 'js' );</script>
-	<?php
-
-}
-
-add_action( 'wp_head', 'twentytwenty_no_js_class' );
-
-/**
- * Adds conditional body classes.
- *
- * @since Twenty Twenty 1.0
- *
- * @param array $classes Classes added to the body tag.
- * @return array Classes added to the body tag.
- */
-function twentytwenty_body_classes( $classes ) {
-
-	global $post;
-	$post_type = isset( $post ) ? $post->post_type : false;
-
-	// Check whether we're singular.
-	if ( is_singular() ) {
-		$classes[] = 'singular';
-	}
-
-	// Check whether the current page should have an overlay header.
-	if ( is_page_template( array( 'templates/template-cover.php' ) ) ) {
-		$classes[] = 'overlay-header';
-	}
-
-	// Check whether the current page has full-width content.
-	if ( is_page_template( array( 'templates/template-full-width.php' ) ) ) {
-		$classes[] = 'has-full-width-content';
-	}
-
-	// Check for enabled search.
-	if ( true === get_theme_mod( 'enable_header_search', true ) ) {
-		$classes[] = 'enable-search-modal';
-	}
-
-	// Check for post thumbnail.
-	if ( is_singular() && has_post_thumbnail() ) {
-		$classes[] = 'has-post-thumbnail';
-	} elseif ( is_singular() ) {
-		$classes[] = 'missing-post-thumbnail';
-	}
-
-	// Check whether we're in the customizer preview.
-	if ( is_customize_preview() ) {
-		$classes[] = 'customizer-preview';
-	}
-
-	// Check if posts have single pagination.
-	if ( is_single() && ( get_next_post() || get_previous_post() ) ) {
-		$classes[] = 'has-single-pagination';
-	} else {
-		$classes[] = 'has-no-pagination';
-	}
-
-	// Check if we're showing comments.
-	if ( $post && ( ( 'post' === $post_type || comments_open() || get_comments_number() ) && ! post_password_required() ) ) {
-		$classes[] = 'showing-comments';
-	} else {
-		$classes[] = 'not-showing-comments';
-	}
-
-	// Check if avatars are visible.
-	$classes[] = get_option( 'show_avatars' ) ? 'show-avatars' : 'hide-avatars';
-
-	// Slim page template class names (class = name - file suffix).
-	if ( is_page_template() ) {
-		$classes[] = basename( get_page_template_slug(), '.php' );
-	}
-
-	// Check for the elements output in the top part of the footer.
-	$has_footer_menu = has_nav_menu( 'footer' );
-	$has_social_menu = has_nav_menu( 'social' );
-	$has_sidebar_1   = is_active_sidebar( 'sidebar-1' );
-	$has_sidebar_2   = is_active_sidebar( 'sidebar-2' );
-
-	// Add a class indicating whether those elements are output.
-	if ( $has_footer_menu || $has_social_menu || $has_sidebar_1 || $has_sidebar_2 ) {
-		$classes[] = 'footer-top-visible';
-	} else {
-		$classes[] = 'footer-top-hidden';
-	}
-
-	// Get header/footer background color.
-	$header_footer_background = get_theme_mod( 'header_footer_background_color', '#ffffff' );
-	$header_footer_background = strtolower( '#' . ltrim( $header_footer_background, '#' ) );
-
-	// Get content background color.
-	$background_color = get_theme_mod( 'background_color', 'f5efe0' );
-	$background_color = strtolower( '#' . ltrim( $background_color, '#' ) );
-
-	// Add extra class if main background and header/footer background are the same color.
-	if ( $background_color === $header_footer_background ) {
-		$classes[] = 'reduced-spacing';
-	}
-
-	return $classes;
-
-}
-
-add_filter( 'body_class', 'twentytwenty_body_classes' );
-
-/**
- * Archives
- */
-
-/**
- * Filters the archive title and styles the word before the first colon.
- *
- * @since Twenty Twenty 1.0
- *
- * @param string $title Current archive title.
- * @return string Current archive title.
- */
-function twentytwenty_get_the_archive_title( $title ) {
-
+if ( ! function_exists( 'sinatra_social_links' ) ) :
 	/**
-	 * Filters the regular expression used to style the word before the first colon.
+	 * The template tag for displaying social icons.
 	 *
-	 * @since Twenty Twenty 1.0
-	 *
-	 * @param array $regex An array of regular expression pattern and replacement.
+	 * @param  array $args Args for wp_nav_menu function.
+	 * @since  1.0.0
+	 * @return void
 	 */
-	$regex = apply_filters(
-		'twentytwenty_get_the_archive_title_regex',
-		array(
-			'pattern'     => '/(\A[^\:]+\:)/',
-			'replacement' => '<span class="color-accent">$1</span>',
-		)
-	);
+	function sinatra_social_links( $args = array() ) {
 
-	if ( empty( $regex ) ) {
+		$defaults = array(
+			'fallback_cb'     => '',
+			'menu'            => '',
+			'container'       => 'nav',
+			'container_class' => 'sinatra-social-nav',
+			'menu_class'      => 'sinatra-socials-menu',
+			'depth'           => 1,
+			'link_before'     => '<span class="screen-reader-text">',
+			'link_after'      => '</span>' . sinatra()->icons->get_svg( 'external-link', array( 'aria-hidden' => 'true' ) ) . sinatra()->icons->get_svg(
+				'external-link',
+				array(
+					'aria-hidden' => 'true',
+					'class'       => 'bottom-icon',
+				)
+			),
+			'style'           => '',
+			'align'           => '',
+			'size'            => 'si-standard',
+		);
 
-		return $title;
+		$args = wp_parse_args( $args, $defaults );
+		$args = apply_filters( 'sinatra_social_links_args', $args );
 
+		// Add style class to container_class.
+		if ( ! empty( $args['style'] ) ) {
+			$args['container_class'] .= ' ' . esc_attr( $args['style'] );
+		}
+
+		// Add alignment class to container_class.
+		if ( ! empty( $args['align'] ) ) {
+			$args['menu_class'] .= ' ' . esc_attr( $args['align'] );
+		}
+
+		// Add size class to container_class.
+		if ( ! empty( $args['size'] ) ) {
+			$args['container_class'] .= ' ' . esc_attr( $args['size'] );
+		}
+
+		if ( ! empty( $args['menu'] ) && is_nav_menu( $args['menu'] ) ) {
+			wp_nav_menu( $args );
+		}
 	}
+endif;
 
-	return preg_replace( $regex['pattern'], $regex['replacement'], $title );
-
-}
-
-add_filter( 'get_the_archive_title', 'twentytwenty_get_the_archive_title' );
-
-/**
- * Miscellaneous
- */
-
-/**
- * Toggles animation duration in milliseconds.
- *
- * @since Twenty Twenty 1.0
- *
- * @return int Duration in milliseconds
- */
-function twentytwenty_toggle_duration() {
+if ( ! function_exists( 'sinatra_navigation' ) ) :
 	/**
-	 * Filters the animation duration/speed used usually for submenu toggles.
+	 * The template tag for displaying social icons.
 	 *
-	 * @since Twenty Twenty 1.0
-	 *
-	 * @param int $duration Duration in milliseconds.
+	 * @param  array $args Args for wp_nav_menu function.
+	 * @since  1.0.0
+	 * @return void
 	 */
-	$duration = apply_filters( 'twentytwenty_toggle_duration', 250 );
+	function sinatra_navigation( $args = array() ) {
 
-	return $duration;
-}
+		$defaults = array(
+			'before_nav' => '',
+			'after_nav'  => '',
+		);
 
-/**
- * Gets unique ID.
- *
- * This is a PHP implementation of Underscore's uniqueId method. A static variable
- * contains an integer that is incremented with each call. This number is returned
- * with the optional prefix. As such the returned value is not universally unique,
- * but it is unique across the life of the PHP process.
- *
- * @since Twenty Twenty 1.0
- *
- * @see wp_unique_id() Themes requiring WordPress 5.0.3 and greater should use this instead.
- *
- * @param string $prefix Prefix for the returned ID.
- * @return string Unique ID.
- */
-function twentytwenty_unique_id( $prefix = '' ) {
-	static $id_counter = 0;
-	if ( function_exists( 'wp_unique_id' ) ) {
-		return wp_unique_id( $prefix );
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['items_wrap'] = isset( $args['items_wrap'] ) ? $args['items_wrap'] : '<ul id="%1$s" class="%2$s">%3$s</ul>';
+		$args['items_wrap'] = $args['before_nav'] . $args['items_wrap'] . $args['after_nav'];
+
+		$args = apply_filters( 'sinatra_navigation_args', $args );
+
+		if ( ! empty( $args['menu'] ) && is_nav_menu( $args['menu'] ) ) {
+			wp_nav_menu( $args );
+		}
 	}
-	return $prefix . (string) ++$id_counter;
-}
+endif;
+
+if ( ! function_exists( 'sinatra_breadcrumb' ) ) :
+	/**
+	 * Outputs breadcrumbs trail
+	 *
+	 * @param array $args Array of breadcrumb options.
+	 */
+	function sinatra_breadcrumb( $args = array() ) {
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'container_before' => '',
+				'container_after'  => '',
+			)
+		);
+
+		echo wp_kses_post( $args['container_before'] );
+
+		sinatra_breadcrumb_trail(
+			array(
+				'show_browse' => false,
+			)
+		);
+
+		echo wp_kses_post( $args['container_after'] );
+	}
+endif;

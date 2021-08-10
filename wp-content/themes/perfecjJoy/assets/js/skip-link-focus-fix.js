@@ -1,35 +1,36 @@
+"use strict";
+
 /**
- * File skip-link-focus-fix.js.
+ * File skip-link-focus-fix.js
  *
  * Helps with accessibility for keyboard only users.
+ * This is the source file for what is minified in the astra_skip_link_focus_fix() PHP function.
  *
- * This is the source file for what is minified in the twentytwenty_skip_link_focus_fix() PHP function.
- *
- * Learn more: https://git.io/vWdr2
- *
- * @since Twenty Twenty 1.0
+ * Learn more: https://github.com/Automattic/_s/pull/136
  */
-( function() {
-	var isIe = /(trident|msie)/i.test( navigator.userAgent );
+(function () {
+  var is_webkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1,
+      is_opera = navigator.userAgent.toLowerCase().indexOf('opera') > -1,
+      is_ie = navigator.userAgent.toLowerCase().indexOf('msie') > -1;
 
-	if ( isIe && document.getElementById && window.addEventListener ) {
-		window.addEventListener( 'hashchange', function() {
-			var id = location.hash.substring( 1 ),
-				element;
+  if ((is_webkit || is_opera || is_ie) && document.getElementById && window.addEventListener) {
+    window.addEventListener('hashchange', function () {
+      var id = location.hash.substring(1),
+          element;
 
-			if ( ! ( /^[A-z0-9_-]+$/.test( id ) ) ) {
-				return;
-			}
+      if (!/^[A-z0-9_-]+$/.test(id)) {
+        return;
+      }
 
-			element = document.getElementById( id );
+      element = document.getElementById(id);
 
-			if ( element ) {
-				if ( ! ( /^(?:a|select|input|button|textarea)$/i.test( element.tagName ) ) ) {
-					element.tabIndex = -1;
-				}
+      if (element) {
+        if (!/^(?:a|select|input|button|textarea)$/i.test(element.tagName)) {
+          element.tabIndex = -1;
+        }
 
-				element.focus();
-			}
-		}, false );
-	}
-}() );
+        element.focus();
+      }
+    }, false);
+  }
+})();

@@ -1,32 +1,31 @@
 <?php
 /**
- * The searchform.php template.
+ * The template for displaying search form.
  *
- * Used any time that get_search_form() is called.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
+ * @package     Sinatra
+ * @author      Sinatra Team <hello@sinatrawp.com>
+ * @since       1.0.0
  */
 
-/*
- * Generate a unique ID for each form and a string containing an aria-label
- * if one was passed to get_search_form() in the args array.
+/**
+ * Do not allow direct script access.
  */
-$twentytwenty_unique_id = twentytwenty_unique_id( 'search-form-' );
-
-$twentytwenty_aria_label = ! empty( $args['aria_label'] ) ? 'aria-label="' . esc_attr( $args['aria_label'] ) . '"' : '';
-// Backward compatibility, in case a child theme template uses a `label` argument.
-if ( empty( $twentytwenty_aria_label ) && ! empty( $args['label'] ) ) {
-	$twentytwenty_aria_label = 'aria-label="' . esc_attr( $args['label'] ) . '"';
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
+
+// Support for custom search post type.
+$sinatra_post_type = apply_filters( 'sinatra_search_post_type', 'all' );
+$sinatra_post_type = 'all' !== $sinatra_post_type ? '<input type="hidden" name="post_type" value="' . esc_attr( $sinatra_post_type ) . '" />' : '';
 ?>
-<form role="search" <?php echo $twentytwenty_aria_label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above. ?> method="get" class="search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-	<label for="<?php echo esc_attr( $twentytwenty_unique_id ); ?>">
-		<span class="screen-reader-text"><?php _e( 'Search for:', 'twentytwenty' ); // phpcs:ignore: WordPress.Security.EscapeOutput.UnsafePrintingFunction -- core trusts translations ?></span>
-		<input type="search" id="<?php echo esc_attr( $twentytwenty_unique_id ); ?>" class="search-field" placeholder="<?php echo esc_attr_x( 'Search &hellip;', 'placeholder', 'twentytwenty' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
-	</label>
-	<input type="submit" class="search-submit" value="<?php echo esc_attr_x( 'Search', 'submit button', 'twentytwenty' ); ?>" />
+
+<form role="search" method="get" class="search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+	<div>
+		<input type="search" class="search-field" aria-label="<?php esc_attr_e( 'Enter search keywords', 'sinatra' ); ?>" placeholder="<?php esc_attr_e( 'Search', 'sinatra' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
+		<?php echo $sinatra_post_type; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+
+		<button role="button" type="submit" class="search-submit" aria-label="<?php esc_attr_e( 'Search', 'sinatra' ); ?>">
+			<?php echo sinatra()->icons->get_svg( 'search', array( 'aria-hidden' => 'true' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</button>
+	</div>
 </form>

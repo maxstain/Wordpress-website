@@ -1,61 +1,35 @@
 <?php
 /**
- * The template for displaying the footer
- *
- * Contains the opening of the #site-footer div and all content after.
+ * The template for displaying the footer in our theme.
  *
  * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
+ * @package     Sinatra
+ * @author      Sinatra Team <hello@sinatrawp.com>
+ * @since       1.0.0
  */
 
 ?>
-			<footer id="site-footer" role="contentinfo" class="header-footer-group">
+		<?php do_action( 'sinatra_main_end' ); ?>
 
-				<div class="section-inner">
+	</div><!-- #main .site-main -->
+	<?php do_action( 'sinatra_after_main' ); ?>
 
-					<div class="footer-credits">
+	<?php do_action( 'sinatra_before_colophon' ); ?>
 
-						<p class="footer-copyright">&copy;
-							<?php
-							echo date_i18n(
-								/* translators: Copyright date format, see https://www.php.net/manual/datetime.format.php */
-								_x( 'Y', 'copyright date format', 'twentytwenty' )
-							);
-							?>
-							<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php bloginfo( 'name' ); ?></a>
-						</p><!-- .footer-copyright -->
+	<?php if ( sinatra_is_colophon_displayed() ) { ?>
+		<footer id="colophon" class="site-footer" role="contentinfo"<?php sinatra_schema_markup( 'footer' ); ?>>
 
-						<p class="powered-by-wordpress">
-							<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'twentytwenty' ) ); ?>">
-								<?php _e( 'Powered by WordPress', 'twentytwenty' ); ?>
-							</a>
-						</p><!-- .powered-by-wordpress -->
+			<?php do_action( 'sinatra_footer' ); ?>
 
-					</div><!-- .footer-credits -->
+		</footer><!-- #colophon .site-footer -->
+	<?php } ?>
 
-					<a class="to-the-top" href="#site-header">
-						<span class="to-the-top-long">
-							<?php
-							/* translators: %s: HTML character for up arrow. */
-							printf( __( 'To the top %s', 'twentytwenty' ), '<span class="arrow" aria-hidden="true">&uarr;</span>' );
-							?>
-						</span><!-- .to-the-top-long -->
-						<span class="to-the-top-short">
-							<?php
-							/* translators: %s: HTML character for up arrow. */
-							printf( __( 'Up %s', 'twentytwenty' ), '<span class="arrow" aria-hidden="true">&uarr;</span>' );
-							?>
-						</span><!-- .to-the-top-short -->
-					</a><!-- .to-the-top -->
+	<?php do_action( 'sinatra_after_colophon' ); ?>
 
-				</div><!-- .section-inner -->
+</div><!-- END #page -->
+<?php do_action( 'sinatra_after_page_wrapper' ); ?>
+<?php wp_footer(); ?>
 
-			</footer><!-- #site-footer -->
-
-		<?php wp_footer(); ?>
-
-	</body>
+</body>
 </html>

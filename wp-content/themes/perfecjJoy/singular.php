@@ -1,34 +1,46 @@
 <?php
 /**
- * The template for displaying single posts and pages.
+ * The template for displaying all pages, single posts and attachments.
  *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * This is a new template file that WordPress introduced in
+ * version 4.3.
  *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
+ *
+ * @package     Sinatra
+ * @author      Sinatra Team <hello@sinatrawp.com>
+ * @since       1.0.0
  */
 
-get_header();
 ?>
 
-<main id="site-content" role="main">
+<?php get_header(); ?>
 
-	<?php
+<div class="si-container">
 
-	if ( have_posts() ) {
+	<div id="primary" class="content-area">
 
-		while ( have_posts() ) {
-			the_post();
+		<?php do_action( 'sinatra_before_content' ); ?>
 
-			get_template_part( 'template-parts/content', get_post_type() );
-		}
-	}
+		<main id="content" class="site-content" role="main"<?php sinatra_schema_markup( 'main' ); ?>>
 
-	?>
+			<?php
+			do_action( 'sinatra_before_singular' );
 
-</main><!-- #site-content -->
+			do_action( 'sinatra_content_singular' );
 
-<?php get_template_part( 'template-parts/footer-menus-widgets' ); ?>
+			do_action( 'sinatra_after_singular' );
+			?>
 
-<?php get_footer(); ?>
+		</main><!-- #content .site-content -->
+
+		<?php do_action( 'sinatra_after_content' ); ?>
+
+	</div><!-- #primary .content-area -->
+
+	<?php do_action( 'sinatra_sidebar' ); ?>
+
+</div><!-- END .si-container -->
+
+<?php
+get_footer();

@@ -1,132 +1,99 @@
 <?php
 /**
- * The template file for displaying the comments and comment form for the
- * Twenty Twenty theme.
+ * The template for displaying comments.
  *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
+ * This is the template that displays the area of the page that contains both the current comments
+ * and the comment form.
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package     Sinatra
+ * @author      Sinatra Team <hello@sinatrawp.com>
+ * @since       1.0.0
  */
 
 /*
- * If the current post is protected by a password and
- * the visitor has not yet entered the password we will
- * return early without loading the comments.
-*/
-if ( post_password_required() ) {
+ * Return if comments are not meant to be displayed.
+ */
+if ( ! sinatra_comments_displayed() ) {
 	return;
 }
 
-if ( $comments ) {
-	?>
+?>
+<?php do_action( 'sinatra_before_comments' ); ?>
+<section id="comments" class="comments-area">
 
-	<div class="comments" id="comments">
+	<div class="comments-title-wrapper center-text">
+		<h3 class="comments-title">
+			<?php
+
+			// Get comments number.
+			$sinatra_comments_count = get_comments_number();
+
+			if ( 0 === intval( $sinatra_comments_count ) ) {
+				$sinatra_comments_title = esc_html__( 'Comments', 'sinatra' );
+			} else {
+				/* translators: %s Comment number */
+				$sinatra_comments_title = sprintf( _n( '%s Comment', '%s Comments', $sinatra_comments_count, 'sinatra' ), number_format_i18n( $sinatra_comments_count ) );
+			}
+
+			// Apply filters to the comments count.
+			$sinatra_comments_title = apply_filters( 'sinatra_comments_count', $sinatra_comments_title );
+
+			echo wp_kses( $sinatra_comments_title, sinatra_get_allowed_html_tags() );
+			?>
+		</h3><!-- END .comments-title -->
 
 		<?php
-		$comments_number = absint( get_comments_number() );
+		if ( ! have_comments() ) {
+			$sinatra_no_comments_title = apply_filters( 'sinatra_no_comments_text', esc_html__( 'No comments yet. Why don&rsquo;t you start the discussion?', 'sinatra' ) );
+			?>
+			<p class="no-comments"><?php echo esc_html( $sinatra_no_comments_title ); ?></p>
+		<?php } ?>
+	</div>
+
+	<ol class="comment-list">
+		<?php
+
+		// List comments.
+		wp_list_comments(
+			array(
+				'callback'    => 'sinatra_comment',
+				'avatar_size' => apply_filters( 'sinatra_comment_avatar_size', 50 ),
+				'reply_text'  => __( 'Reply', 'sinatra' ),
+			)
+		);
 		?>
-
-		<div class="comments-header section-inner small max-percentage">
-
-			<h2 class="comment-reply-title">
-			<?php
-			if ( ! have_comments() ) {
-				_e( 'Leave a comment', 'twentytwenty' );
-			} elseif ( 1 === $comments_number ) {
-				/* translators: %s: Post title. */
-				printf( _x( 'One reply on &ldquo;%s&rdquo;', 'comments title', 'twentytwenty' ), get_the_title() );
-			} else {
-				printf(
-					/* translators: 1: Number of comments, 2: Post title. */
-					_nx(
-						'%1$s reply on &ldquo;%2$s&rdquo;',
-						'%1$s replies on &ldquo;%2$s&rdquo;',
-						$comments_number,
-						'comments title',
-						'twentytwenty'
-					),
-					number_format_i18n( $comments_number ),
-					get_the_title()
-				);
-			}
-
-			?>
-			</h2><!-- .comments-title -->
-
-		</div><!-- .comments-header -->
-
-		<div class="comments-inner section-inner thin max-percentage">
-
-			<?php
-			wp_list_comments(
-				array(
-					'walker'      => new TwentyTwenty_Walker_Comment(),
-					'avatar_size' => 120,
-					'style'       => 'div',
-				)
-			);
-
-			$comment_pagination = paginate_comments_links(
-				array(
-					'echo'      => false,
-					'end_size'  => 0,
-					'mid_size'  => 0,
-					'next_text' => __( 'Newer Comments', 'twentytwenty' ) . ' <span aria-hidden="true">&rarr;</span>',
-					'prev_text' => '<span aria-hidden="true">&larr;</span> ' . __( 'Older Comments', 'twentytwenty' ),
-				)
-			);
-
-			if ( $comment_pagination ) {
-				$pagination_classes = '';
-
-				// If we're only showing the "Next" link, add a class indicating so.
-				if ( false === strpos( $comment_pagination, 'prev page-numbers' ) ) {
-					$pagination_classes = ' only-next';
-				}
-				?>
-
-				<nav class="comments-pagination pagination<?php echo $pagination_classes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static output ?>" aria-label="<?php esc_attr_e( 'Comments', 'twentytwenty' ); ?>">
-					<?php echo wp_kses_post( $comment_pagination ); ?>
-				</nav>
-
-				<?php
-			}
-			?>
-
-		</div><!-- .comments-inner -->
-
-	</div><!-- comments -->
+	</ol>
 
 	<?php
-}
+	// If comments are closed and there are comments, let's leave a note.
+	if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
+		?>
+		<p class="comments-closed center-text"><?php esc_html_e( 'Comments are closed', 'sinatra' ); ?></p>
+	<?php endif; ?>
 
-if ( comments_open() || pings_open() ) {
-
-	if ( $comments ) {
-		echo '<hr class="styled-separator is-style-wide" aria-hidden="true" />';
-	}
-
-	comment_form(
+	<?php
+	the_comments_pagination(
 		array(
-			'class_form'         => 'section-inner thin max-percentage',
-			'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
-			'title_reply_after'  => '</h2>',
+			'prev_text' => '<span class="screen-reader-text">' . __( 'Previous', 'sinatra' ) . '</span>',
+			'next_text' => '<span class="screen-reader-text">' . __( 'Next', 'sinatra' ) . '</span>',
 		)
 	);
-
-} elseif ( is_single() ) {
-
-	if ( $comments ) {
-		echo '<hr class="styled-separator is-style-wide" aria-hidden="true" />';
-	}
-
 	?>
 
-	<div class="comment-respond" id="respond">
-
-		<p class="comments-closed"><?php _e( 'Comments are closed.', 'twentytwenty' ); ?></p>
-
-	</div><!-- #respond -->
-
 	<?php
-}
+	comment_form(
+		array(
+			/* translators: %1$s opening anchor tag, %2$s closing anchor tag */
+			'must_log_in'   => '<p class="must-log-in">' . sprintf( esc_html__( 'You must be %1$slogged in%2$s to post a comment.', 'sinatra' ), '<a href="' . wp_login_url( apply_filters( 'the_permalink', get_permalink() ) ) . '">', '</a>' ) . '</p>', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+			'logged_in_as'  => '<p class="logged-in-as">' . esc_html__( 'Logged in as', 'sinatra' ) . ' <a href="' . esc_url( admin_url( 'profile.php' ) ) . '">' . $user_identity . '</a> <a href="' . wp_logout_url( get_permalink() ) . '" title="' . esc_html__( 'Log out of this account', 'sinatra' ) . '">' . esc_html__( 'Log out?', 'sinatra' ) . '</a></p>',
+			'class_submit'  => 'si-btn primary-button',
+			'comment_field' => '<p class="comment-textarea"><textarea name="comment" id="comment" cols="44" rows="8" class="textarea-comment" placeholder="' . esc_html__( 'Write a comment&hellip;', 'sinatra' ) . '" required="required"></textarea></p>',
+			'id_submit'     => 'comment-submit',
+		)
+	);
+	?>
+
+</section><!-- #comments -->
+<?php do_action( 'sinatra_after_comments' ); ?>

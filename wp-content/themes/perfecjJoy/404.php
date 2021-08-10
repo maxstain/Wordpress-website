@@ -1,36 +1,35 @@
 <?php
 /**
- * The template for displaying the 404 template in the Twenty Twenty theme.
+ * The template for displaying 404 pages (not found).
  *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
+ * @link https://codex.wordpress.org/Creating_an_Error_404_Page
+ *
+ * @package     Sinatra
+ * @author      Sinatra Team <hello@sinatrawp.com>
+ * @since       1.0.0
  */
 
-get_header();
 ?>
 
-<main id="site-content" role="main">
+<?php get_header(); ?>
 
-	<div class="section-inner thin error404-content">
+<div class="si-container">
 
-		<h1 class="entry-title"><?php _e( 'Page Not Found', 'twentytwenty' ); ?></h1>
+	<div id="primary" class="content-area">
 
-		<div class="intro-text"><p><?php _e( 'The page you were looking for could not be found. It might have been removed, renamed, or did not exist in the first place.', 'twentytwenty' ); ?></p></div>
+		<?php do_action( 'sinatra_before_content' ); ?>
 
-		<?php
-		get_search_form(
-			array(
-				'aria_label' => __( '404 not found', 'twentytwenty' ),
-			)
-		);
-		?>
+		<main id="content" class="site-content" role="main"<?php sinatra_schema_markup( 'main' ); ?>>
 
-	</div><!-- .section-inner -->
+			<?php do_action( 'sinatra_content_404' ); ?>
 
-</main><!-- #site-content -->
+		</main><!-- #content .site-content -->
 
-<?php get_template_part( 'template-parts/footer-menus-widgets' ); ?>
+		<?php do_action( 'sinatra_after_content' ); ?>
+
+	</div><!-- #primary .content-area -->
+
+</div><!-- END .si-container -->
 
 <?php
 get_footer();
