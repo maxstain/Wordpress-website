@@ -131,7 +131,7 @@ class WC_Stripe_Controller_GooglePay extends WC_Stripe_Rest_Controller {
 				'currencyCode'     => get_woocommerce_currency(),
 				'countryCode'      => WC()->countries->get_base_country(),
 				'totalPriceStatus' => 'FINAL',
-				'totalPrice'       => strval( round( WC()->cart->total, 2 ) ),
+				'totalPrice'       => wc_format_decimal( WC()->cart->total, 2 ),
 				'displayItems'     => $this->gateway->get_display_items(),
 				'totalPriceLabel'  => __( 'Total', 'woo-stripe-payment' ),
 			),

@@ -174,6 +174,9 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 		$args['source_order'] = array();
 
 		if ( ( $locale = get_locale() ) ) {
+			if ( $locale == 'fi' ) {
+				$locale = 'fi-FI';
+			}
 			$args['klarna']['locale'] = str_replace( '_', '-', substr( $locale, 0, 5 ) );
 		}
 
@@ -196,7 +199,7 @@ class WC_Payment_Gateway_Stripe_Klarna extends WC_Payment_Gateway_Stripe_Local_P
 			$this->add_klarna_line_items_from_cart( $args, WC()->cart, $currency );
 		}
 
-		return $args;
+		return apply_filters( 'wc_stripe_get_klarna_args', $args, $this );
 	}
 
 	/**

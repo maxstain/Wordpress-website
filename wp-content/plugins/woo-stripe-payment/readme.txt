@@ -4,7 +4,7 @@ Tags: stripe, ach, klarna, credit card, apple pay, google pay, ideal, sepa, sofo
 Requires at least: 3.0.1
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 3.3.6
+Stable tag: 3.3.7
 Copyright: Payment Plugins
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -60,6 +60,10 @@ If you're site is not loading over https, then Stripe won't render the Payment R
 8. Edit payment gateways on the product page
 
 == Changelog ==
+= 3.3.7 =
+* Added - If locale is "fi" change to "fi-FI"
+* Added - Filter "wc_stripe_get_klarna_args"
+* Updated - PHP8, replace round with wc_format_decimal for GPay
 = 3.3.6 =
 * Added - WooFunnels integration that supports credit cards, Apple Pay, GPay, and Payment Request gateway
 * Added - Support for "WooCommerce All Products For Subscriptions" plugin

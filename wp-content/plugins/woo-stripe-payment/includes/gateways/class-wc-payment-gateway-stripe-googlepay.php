@@ -126,7 +126,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 		return array(
 			'label' => $label,
 			'type'  => $type,
-			'price' => strval( round( $price, 2 ) )
+			'price' => wc_format_decimal( $price, 2 )
 		);
 	}
 
@@ -134,7 +134,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 		return array(
 			'label' => esc_attr( $product->get_name() ),
 			'type'  => 'SUBTOTAL',
-			'price' => strval( round( $product->get_price(), 2 ) )
+			'price' => wc_format_decimal( $product->get_price(), 2 )
 		);
 	}
 
@@ -151,7 +151,7 @@ class WC_Payment_Gateway_Stripe_GooglePay extends WC_Payment_Gateway_Stripe {
 		return array(
 			'label' => $label,
 			'type'  => $type,
-			'price' => strval( round( $price, 2 ) )
+			'price' => wc_format_decimal( $price, 2 )
 		);
 	}
 

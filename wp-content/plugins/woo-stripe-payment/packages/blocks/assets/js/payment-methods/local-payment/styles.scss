@@ -1,8 +1,15 @@
 .wc-stripe-label-container {
+  .wc-block-components-payment-method-icons {
+    .wc-block-components-payment-method-icon {
+      max-width: 100% !important;
+    }
+  }
+
   &.stripe_ideal {
     img {
       &.wc-block-components-payment-method-icon--stripe_ideal {
         height: 29px;
+        max-height: 29px;
       }
 
     }
@@ -12,6 +19,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_p24 {
         height: 25px;
+        max-height: 25px;
       }
 
     }
@@ -21,6 +29,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_bancontact {
         height: 26px;
+        max-height: 26px;
       }
 
     }
@@ -30,6 +39,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_eps {
         height: 34px;
+        max-height: 34px;
       }
 
     }
@@ -39,6 +49,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_multibanco {
         height: 45px;
+        max-height: 45px;
       }
 
     }
@@ -48,6 +59,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_sepa {
         height: 17px;
+        max-height: 17px;
       }
 
     }
@@ -57,6 +69,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_sofort {
         height: 22px;
+        max-height: 22px;
       }
 
     }
@@ -66,6 +79,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_fpx {
         height: 22px;
+        max-height: 22px;
       }
 
     }
@@ -75,6 +89,7 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_alipay {
         height: 25px;
+        max-height: 25px;
       }
 
     }
@@ -84,6 +99,8 @@
     img {
       &.wc-block-components-payment-method-icon--stripe_klarna {
         height: 26px;
+        max-height: 26px;
+        max-width: 48px;
       }
 
     }

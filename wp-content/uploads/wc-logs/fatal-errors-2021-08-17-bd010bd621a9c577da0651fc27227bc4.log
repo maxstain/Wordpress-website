@@ -1,0 +1,8 @@
+2021-08-17T19:23:23+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-content\plugins\woocommerce-gateway-stripe\includes\compat\class-wc-stripe-sepa-subs-compat.php on line 2
+
+2021-08-17T19:24:00+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-includes\plugin.php on line 174
+
+2021-08-17T19:24:19+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-includes\Requests\Transport\cURL.php on line 462
+
+2021-08-17T19:25:58+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-admin\includes\class-wp-site-health-auto-updates.php on line 365
+

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Stripe For WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Stripe For WooCommerce 3.3.6\n"
+"Project-Id-Version: Stripe For WooCommerce 3.3.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-stripe-payment\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-07-23T02:27:54+00:00\n"
+"POT-Creation-Date: 2021-08-10T00:20:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woo-stripe-payment\n"
@@ -233,21 +233,21 @@ msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:1556
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:1587
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:230
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:291
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:233
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:294
 msgid "Shipping"
 msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:1564
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:1590
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:240
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:301
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:243
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:304
 msgid "Discount"
 msgstr ""
 
 #: includes/abstract/abstract-wc-payment-gateway-stripe.php:1567
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:258
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:323
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:261
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:326
 msgid "Tax"
 msgstr ""
 
@@ -1235,31 +1235,31 @@ msgstr ""
 msgid "If enabled, the payment option labels will use the Stripe translated text."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:250
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:253
 msgid "Fee total"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:315
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:318
 msgid "Fee"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:350
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:353
 msgid "Pay Now"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:351
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:354
 msgid "Pay Later"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:352
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:355
 msgid "Pay Over Time"
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:365
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:368
 msgid "Click %1$shere%2$s for Klarna test payment methods."
 msgstr ""
 
-#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:371
+#: includes/gateways/class-wc-payment-gateway-stripe-klarna.php:374
 #: packages/blocks/assets/js/payment-methods/local-payment/klarna/hooks/use-process-payment.js:31
 #: packages/blocks/build/commons.js:3985
 msgid "Your purchase is not approved."

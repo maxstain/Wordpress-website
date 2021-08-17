@@ -12,3 +12,9 @@
 
 2021-08-10T00:20:50+00:00 CRITICAL Allowed memory size of 134217728 bytes exhausted (tried to allocate 679936 bytes) in C:\xampp\htdocs\wordpress\wp-includes\functions.php on line 1050
 
+2021-08-10T20:16:28+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-content\themes\sinatra\inc\template-parts.php on line 13
+
+2021-08-10T20:17:10+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-admin\includes\dashboard.php on line 20
+
+2021-08-10T20:30:17+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in C:\xampp\htdocs\wordpress\wp-includes\Requests\Transport\cURL.php on line 484
+
